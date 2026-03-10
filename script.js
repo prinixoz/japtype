@@ -176,7 +176,7 @@ input.addEventListener("input", () => {
     }
 
     // wrong if user exceeds possible length
-    if (typed.length > maxLen) {
+    if (typed.length >= maxLen) {
 
         char.classList.add("show")
         char.classList.add("wrong")
