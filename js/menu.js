@@ -88,6 +88,10 @@ function executeCommand() {
         renderKanaBar(KANJI_GROUPS)
     }
 
+    if (cmd === "restart") {
+        startMode(DATA)   // same as pressing Tab
+    }
+
     if (cmd === "quiz") {
         alert("quiz mode coming soon")
     }
@@ -97,7 +101,6 @@ function executeCommand() {
     }
 
     closeMenu()
-
 }
 
 commandInput.addEventListener("input", () => {
@@ -164,6 +167,23 @@ document.addEventListener("keydown", e => {
         }
 
     }
+
+})
+
+/* mouse support */
+
+commands.forEach((cmd, i) => {
+
+    cmd.addEventListener("click", () => {
+        activeIndex = i
+        updateHighlight()
+        executeCommand()
+    })
+
+    cmd.addEventListener("mouseenter", () => {
+        activeIndex = i
+        updateHighlight()
+    })
 
 })
 

@@ -128,7 +128,7 @@ input.addEventListener("input", () => {
 
         char.classList.add("show")
 
-        if (typed === correct) {
+        if (typed.toLowerCase() === correct) {
             char.classList.add("correct")
         } else {
 
