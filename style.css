@@ -34,6 +34,10 @@ white-space:nowrap;
 transition:transform .2s ease;
 }
 
+#words{
+font-family: "Kosugi Maru", sans-serif;
+}
+
 .char{
 display:flex;
 flex-direction:column;
