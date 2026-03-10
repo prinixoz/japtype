@@ -131,7 +131,7 @@ function applyTheme(name) {
 
 function loadTheme() {
 
-    const saved = localStorage.getItem("theme") || "nord"
+    const saved = localStorage.getItem("theme") || "stealth"
 
     applyTheme(saved)
 
