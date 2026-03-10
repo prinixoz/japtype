@@ -2,13 +2,17 @@ const wordsEl = document.getElementById("words")
 const input = document.getElementById("input")
 const preview = document.getElementById("preview")
 
+function resetKanji() {
+    loadedKanji = {}
+}
+
 let DATA = HIRAGANA
 let queue = []
 let chars = []
 let index = 0
 
 
-function startMode(mode) {
+async function startMode(mode) {
 
     DATA = mode
     currentMode = mode
@@ -29,13 +33,15 @@ function startMode(mode) {
     }
 
     if (mode === "KANJI") {
+        resetKanji()
         DATA = {}
         queue = []
         renderKanaBar(KANJI_GROUPS)
-        loadKanjiLevel("n5")
+        await loadKanjiLevel("n5")
+    } else {
+        shuffle(queue)
     }
 
-    shuffle(queue)
     generate()
 }
 

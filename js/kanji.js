@@ -63,3 +63,4 @@ const KANJI_GROUPS = [
     { kana: "漢", label: "N1", set: [] }
 
 ]
+

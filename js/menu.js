@@ -58,10 +58,13 @@ const MENUS = {
     ],
     themes: [
         { icon: "←", name: "Back", submenu: "main" },
-        { icon: "🎨", name: "Nord", action: () => setTheme?.("nord") },
-        { icon: "🎨", name: "Dark", action: () => setTheme?.("dark") },
-        { icon: "🎨", name: "Light", action: () => setTheme?.("light") }
-    ]
+
+        ...Object.keys(THEMES).map(name => ({
+            icon: "🎨",
+            name: name,
+            action: () => applyTheme(name)
+        }))
+    ],
 
 }
 

@@ -1,6 +1,43 @@
+:root{
+
+--bg:#0f1117;
+--text:#d8dee9;
+--accent:#88c0d0;
+
+/* menu */
+--menu-bg:#141922;
+--menu-border:#1f2633;
+--menu-input-bg:#141922;
+
+--menu-item:#cfd6e6;
+--menu-hover-bg:#1b2230;
+--menu-hover-text:#ffffff;
+
+--menu-active-bg:#263041;
+--menu-active-text:#ffffff;
+
+--menu-placeholder:#6f7a92;
+
+/* rest */
+--char-idle:#4c566a;
+--correct:#50fa7b;
+--wrong:#ff6b6b;
+
+--current-bg:#88c0d0;
+--current-text:#2e3440;
+
+--footer:#434c5e;
+
+--kbd-bg:#2e3440;
+
+--kana-active:#9cd6cf;
+}
+
+
+
 body{
-background:#0f1117;
-color:#d8dee9;
+background:var(--bg);
+color:var(--text);
 font-family:monospace;
 display:flex;
 align-items:center;
@@ -14,12 +51,16 @@ width:900px;
 text-align:center;
 }
 
+
+
 #preview{
 height:50px;
 margin-bottom:25px;
 font-size:32px;
-color:#88c0d0;
+color:var(--accent);
 }
+
+
 
 #wrap{
 width:900px;
@@ -27,28 +68,33 @@ overflow:hidden;
 margin-bottom:40px;
 }
 
+
+
 #words{
 display:flex;
 gap:32px;
 white-space:nowrap;
 transition:transform .2s ease;
+font-family:"Kosugi Maru", sans-serif;
 }
 
-#words{
-font-family: "Kosugi Maru", sans-serif;
-}
+
 
 .char{
 display:flex;
 flex-direction:column;
 align-items:center;
 font-size:64px;
-color:#4c566a;
+color:var(--char-idle);
 }
+
+
 
 .kana{
 line-height:70px;
 }
+
+
 
 .romaji{
 font-size:24px;
@@ -56,51 +102,84 @@ height:28px;
 opacity:0;
 }
 
+
+
 .char.show .romaji{
 opacity:1;
 }
 
+
+
 .correct{
-color:#50fa7b;
+color:var(--correct);
 }
+
+
 
 .wrong{
-color:#ff6b6b;
+color:var(--wrong);
 }
 
+
+
 .current{
-background:#88c0d0;
-color:#2e3440;
+background:var(--current-bg);
+color:var(--current-text);
 border-radius:6px;
 padding:4px 8px;
 }
+
+
 
 #input{
 opacity:0;
 position:absolute;
 }
 
+
+
 .footer{
 position:fixed;
 bottom:20px;
 left:50%;
 transform:translateX(-50%);
-color:#434c5e;
+color:var(--footer);
 font-size:14px;
 }
 
+
+
 kbd{
-background:#2e3440;
+background:var(--kbd-bg);
 padding:3px 6px;
 border-radius:4px;
 font-size:12px;
 }
 
-#words{
-transition:transform .2s ease;
+
+
+.kana-group.active{
+color:var(--kana-active);
+font-weight:600;
 }
 
-.kana-group.active {
-color:#9cd6cf;
-font-weight:600;
+#words {
+    color: var(--text);
+}
+
+.word letter {
+    color: var(--muted);
+}
+
+.word letter.correct {
+    color: var(--correct);
+}
+
+.word letter.incorrect {
+    color: var(--wrong);
+}
+
+.word letter.active {
+    background: var(--accent);
+    color: var(--bg);
 }
