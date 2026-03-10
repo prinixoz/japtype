@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+
+        <link rel="stylesheet" href="style.css">
+        <link rel="stylesheet" href="menu.css">
+        <link rel="stylesheet" href="setting-bar.css">
+
+    </head>
+    <body>
+
+        <div class="container">
+
+            <!-- SETTINGS BAR -->
+
+            <div class="settings-bar">
+
+                <div class="menu-btn">☰</div>
+
+                <div class="divider"></div>
+
+                <!-- dynamic kana buttons will appear here -->
+                <div id="kana-options"></div>
+
+                <div class="divider"></div>
+
+                <div class="option active">🕒 time</div>
+                <div class="option">A words</div>
+
+                <div class="divider"></div>
+
+                <div class="time-group">
+                    <div class="time active">15</div>
+                    <div class="time">30</div>
+                    <div class="time">60</div>
+                    <div class="time">120</div>
+                </div>
+
+                <div class="divider"></div>
+
+                <div class="close-btn">×</div>
+                <div class="expand-btn">▶</div>
+
+            </div>
+
+            <!-- TYPING AREA -->
+            <div id="preview"></div>
+
+            <div id="wrap">
+                <div id="words"></div>
+            </div>
+
+            <input id="input" autofocus>
+
+
+            <!-- FOOTER -->
+            <div class="footer">
+                <span><kbd>tab</kbd> — restart test</span>
+                <span style="margin-left:20px;"><kbd>ctrl</kbd> + <kbd>p</kbd> — command menu</span>
+            </div>
+
+        </div>
+
+
+        <!-- COMMAND MENU -->
+        <div id="commandMenu">
+
+            <input id="commandInput" placeholder="Search...">
+
+            <div id="commandList">
+
+                <div class="cmd"><span class="icon">あ</span> Hiragana</div>
+                <div class="cmd"><span class="icon">ア</span> Katakana</div>
+                <div class="cmd"><span class="icon">漢</span> Kanji</div>
+                <div class="cmd"><span class="icon">〄</span> Mixed Kana</div>
+
+                <div class="cmd"><span class="icon">⌨</span> Typing</div>
+                <div class="cmd"><span class="icon">❓</span> Quiz</div>
+
+                <div class="cmd"><span class="icon">↻</span> Restart</div>
+                <div class="cmd"><span class="icon">🔀</span> Shuffle</div>
+
+                <div class="cmd"><span class="icon">🎨</span> Theme</div>
+                <div class="cmd"><span class="icon">🔤</span> Font</div>
+
+            </div>
+
+        </div>
+
+
+        <script src="./js/hiragana.js"></script>
+        <script src="./js/katakana.js"></script>
+        <script src="./js/mixedkana.js"></script>
+        <script src="./js/kanji.js"></script>
+        <script src="./js/menu.js"></script>
+        <script src="./js/settingbar.js"></script>
+        <script src="script.js"></script>
+
+    </body>
+</html>
