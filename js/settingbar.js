@@ -1,5 +1,6 @@
 const bar = document.querySelector(".settings-bar")
 
+
 document.querySelector(".close-btn").onclick = () => {
     bar.classList.add("collapsed")
 }
@@ -19,9 +20,9 @@ function renderKanaBar(groups) {
         el.className = "kana-group active"
 
         el.innerHTML = `
-<div class="kana">${g.kana}</div>
-<div class="label">${g.label}</div>
-`
+        <div class="kana">${g.kana}</div>
+        <div class="label">${g.label}</div>
+        `
 
         el.dataset.set = JSON.stringify(g.set)
 
@@ -31,9 +32,12 @@ function renderKanaBar(groups) {
 
     })
 
+    renderExtraOptions()
+
     updateQueueFromSelection()
 
 }
+
 
 function toggleKanaGroup(el) {
 
@@ -56,13 +60,75 @@ function updateQueueFromSelection() {
 
     groups.forEach(g => {
 
+        if (!g.dataset.set) return
+
         const set = JSON.parse(g.dataset.set)
 
-        set.forEach(k => queue.push(k))
+        set.forEach(k => {
+
+            // add base kana
+            queue.push(k)
+
+            // dakuten
+            if (dakutenEnabled && DAKUTEN[k]) {
+                DAKUTEN[k].forEach(x => queue.push(x))
+            }
+
+            // combo
+            if (comboEnabled && COMBO[k]) {
+                COMBO[k].forEach(x => queue.push(x))
+            }
+
+        })
 
     })
 
     shuffle(queue)
     generate()
+}
+
+
+let dakutenEnabled = false
+let comboEnabled = false
+
+function renderExtraOptions() {
+
+    // only show for kana modes
+    if (DATA !== HIRAGANA && DATA !== KATAKANA && DATA !== MIXED_KANA) {
+        return
+    }
+
+    const container = document.getElementById("kana-options")
+
+    const dakuten = document.createElement("div")
+    dakuten.className = "kana-group"
+
+    dakuten.innerHTML = `
+        <div class="kana">゛</div>
+        <div class="label">dakuten</div>
+    `
+
+    dakuten.onclick = () => {
+        dakutenEnabled = !dakutenEnabled
+        dakuten.classList.toggle("active")
+        updateQueueFromSelection()
+    }
+
+    const combo = document.createElement("div")
+    combo.className = "kana-group"
+
+    combo.innerHTML = `
+        <div class="kana">ゃ</div>
+        <div class="label">combo</div>
+    `
+
+    combo.onclick = () => {
+        comboEnabled = !comboEnabled
+        combo.classList.toggle("active")
+        updateQueueFromSelection()
+    }
+
+    container.appendChild(dakuten)
+    container.appendChild(combo)
 
 }
