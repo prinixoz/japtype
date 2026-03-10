@@ -7,6 +7,7 @@ let queue = []
 let chars = []
 let index = 0
 
+
 function startMode(mode) {
 
     DATA = mode
@@ -27,16 +28,16 @@ function startMode(mode) {
         renderKanaBar(MIX_GROUPS)
     }
 
-    if (mode === KANJI_N5) {
-        queue = Object.keys(KANJI_N5)
+    if (mode === "KANJI") {
+        DATA = {}
+        queue = []
         renderKanaBar(KANJI_GROUPS)
+        loadKanjiLevel("n5")
     }
 
     shuffle(queue)
     generate()
-
 }
-
 
 
 
@@ -47,6 +48,8 @@ function shuffle(a) {
     }
 }
 
+
+
 function createChar(kana) {
 
     let char = document.createElement("div")
@@ -54,7 +57,10 @@ function createChar(kana) {
 
     let romaji = document.createElement("div")
     romaji.className = "romaji"
-    romaji.textContent = DATA[kana]
+
+    let value = DATA[kana]
+
+    romaji.textContent = Array.isArray(value) ? value[0] : value
 
     let kanaEl = document.createElement("div")
     kanaEl.className = "kana"
@@ -68,10 +74,11 @@ function createChar(kana) {
     return char
 }
 
+
+
 function generate() {
 
     wordsEl.style.transform = "translateX(0px)"
-
     wordsEl.innerHTML = ""
 
     chars = queue.map(kana => createChar(kana))
@@ -97,6 +104,8 @@ function setCursor() {
 
 }
 
+
+
 function center() {
 
     let current = chars[index]
@@ -114,32 +123,41 @@ function center() {
 
 }
 
+
+
 input.addEventListener("input", () => {
 
-    let typed = input.value
+    let typed = input.value.trim()
     preview.textContent = typed
 
     let kana = queue[index]
-    let correct = DATA[kana]
+    let value = DATA[kana]
 
-    if (typed.length === correct.length) {
+    let answers = Array.isArray(value) ? value : [value]
 
-        let char = chars[index]
+    const script = detectScript(typed)
+
+    // select answers for the current script
+    let validAnswers = answers.filter(a => {
+
+        if (script === "romaji") return /^[a-zA-Z]+$/.test(a)
+        if (script === "hiragana") return /^[\u3040-\u309F]+$/.test(a)
+        if (script === "katakana") return /^[\u30A0-\u30FF]+$/.test(a)
+
+        return true
+    })
+
+    if (validAnswers.length === 0) return
+
+    const maxLen = Math.max(...validAnswers.map(a => a.length))
+
+    let char = chars[index]
+
+    // correct
+    if (validAnswers.includes(typed)) {
 
         char.classList.add("show")
-
-        if (typed.toLowerCase() === correct) {
-            char.classList.add("correct")
-        } else {
-
-            char.classList.add("wrong")
-
-            queue.push(kana)
-
-            let newChar = createChar(kana)
-            chars.push(newChar)
-
-        }
+        char.classList.add("correct")
 
         index++
 
@@ -148,6 +166,26 @@ input.addEventListener("input", () => {
 
         setCursor()
 
+        return
+    }
+
+    // wrong if user exceeds possible length
+    if (typed.length > maxLen) {
+
+        char.classList.add("show")
+        char.classList.add("wrong")
+
+        queue.push(kana)
+
+        let newChar = createChar(kana)
+        chars.push(newChar)
+
+        index++
+
+        input.value = ""
+        preview.textContent = ""
+
+        setCursor()
     }
 
 })
@@ -161,15 +199,23 @@ document.addEventListener("keydown", e => {
 
 })
 
+
+
 document.body.onclick = () => input.focus()
+
+
 
 function saveMode(mode) {
     localStorage.setItem("kana_mode", mode)
 }
 
+
+
 function loadMode() {
     return localStorage.getItem("kana_mode")
 }
+
+
 
 let lastMode = loadMode()
 
@@ -191,4 +237,15 @@ function activateKanaGroup(set) {
 
     generate()
 
+}
+
+function detectScript(text) {
+
+    if (/^[a-zA-Z]+$/.test(text)) return "romaji"
+
+    if (/^[\u3040-\u309F]+$/.test(text)) return "hiragana"
+
+    if (/^[\u30A0-\u30FF]+$/.test(text)) return "katakana"
+
+    return "unknown"
 }

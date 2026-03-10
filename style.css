@@ -99,3 +99,8 @@ font-size:12px;
 #words{
 transition:transform .2s ease;
 }
+
+.kana-group.active {
+color:#9cd6cf;
+font-weight:600;
+}

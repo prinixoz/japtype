@@ -1,73 +1,65 @@
-const KANJI_N5 = {
-    "日": "nichi",
-    "一": "ichi",
-    "国": "kuni",
-    "人": "hito",
-    "年": "nen",
-    "大": "dai",
-    "十": "juu",
-    "二": "ni",
-    "本": "hon",
-    "中": "naka",
-    "長": "chou",
-    "出": "shutsu",
-    "三": "san",
-    "時": "ji",
-    "行": "kou",
-    "見": "ken",
-    "月": "getsu",
-    "後": "go",
-    "前": "zen",
-    "生": "sei",
-    "五": "go",
-    "間": "kan",
-    "上": "jou",
-    "東": "tou",
-    "四": "yon",
-    "今": "ima",
-    "金": "kin",
-    "九": "kyuu",
-    "入": "nyuu",
-    "学": "gaku",
-    "高": "kou",
-    "円": "en",
-    "子": "shi",
-    "外": "gai",
-    "八": "hachi",
-    "六": "roku",
-    "下": "ka",
-    "来": "rai",
-    "気": "ki",
-    "小": "shou",
-    "七": "nana",
-    "山": "yama",
-    "話": "hanashi",
-    "女": "onna",
-    "北": "kita",
-    "午": "go",
-    "百": "hyaku",
-    "書": "sho",
-    "先": "sen",
-    "名": "mei",
-    "川": "kawa",
-    "千": "sen",
-    "水": "mizu",
-    "半": "han",
-    "男": "otoko",
-    "西": "nishi",
-    "電": "den",
-    "校": "kou",
-    "語": "go",
-    "土": "tsuchi",
-    "木": "ki",
-    "聞": "bun",
-    "食": "shoku",
-    "車": "kuruma",
-    "何": "nani"
+/* kanji.js */
+
+/* kanji.js */
+
+let loadedKanji = {}
+
+/* load kanji level */
+
+async function loadKanjiLevel(level) {
+
+    if (loadedKanji[level]) return
+
+    const module = await import(`./kanji/${level}.js`)
+
+    const data = module.default
+
+    loadedKanji[level] = data
+
+    Object.assign(DATA, data)
+
+    rebuildKanjiQueue()
+
 }
+
+
+/* remove kanji level */
+
+function removeKanjiLevel(level) {
+
+    const set = loadedKanji[level]
+
+    if (!set) return
+
+    Object.keys(set).forEach(k => delete DATA[k])
+
+    delete loadedKanji[level]
+
+    rebuildKanjiQueue()
+
+}
+
+
+/* rebuild queue */
+
+function rebuildKanjiQueue() {
+
+    queue = Object.keys(DATA)
+
+    shuffle(queue)
+
+    generate()
+
+}
+
+/* kanji levels */
 
 const KANJI_GROUPS = [
 
-    { kana: "漢", label: "N5", set: Object.keys(KANJI_N5) }
+    { kana: "漢", label: "N5", set: [] },
+    { kana: "漢", label: "N4", set: [] },
+    { kana: "漢", label: "N3", set: [] },
+    { kana: "漢", label: "N2", set: [] },
+    { kana: "漢", label: "N1", set: [] }
 
 ]

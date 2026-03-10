@@ -31,7 +31,7 @@ const MENUS = {
         { icon: "あ", name: "Hiragana", action: () => startMode(HIRAGANA) },
         { icon: "ア", name: "Katakana", action: () => startMode(KATAKANA) },
         { icon: "〄", name: "Mixed Kana", action: () => startMode(MIXED_KANA) },
-        { icon: "漢", name: "Kanji", action: () => startMode(KANJI_N5) },
+        { icon: "漢", name: "Kanji", action: () => startMode("KANJI") },
         { icon: "↻", name: "Restart", action: () => startMode(DATA) },
         { icon: "🔤", name: "Font", submenu: "fonts" },
         { icon: "🎨", name: "Theme", submenu: "themes" }

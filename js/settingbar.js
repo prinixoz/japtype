@@ -1,6 +1,5 @@
 const bar = document.querySelector(".settings-bar")
 
-
 document.querySelector(".close-btn").onclick = () => {
     bar.classList.add("collapsed")
 }
@@ -14,19 +13,28 @@ function renderKanaBar(groups) {
     const container = document.getElementById("kana-options")
     container.innerHTML = ""
 
-    groups.forEach(g => {
+    const isKanji = groups === KANJI_GROUPS
+
+    groups.forEach((g, i) => {
 
         const el = document.createElement("div")
-        el.className = "kana-group active"
+        el.className = "kana-group"
+
+        if (isKanji) {
+            if (i === 0) el.classList.add("active")   // default N5
+        } else {
+            el.classList.add("active")               // kana modes all active
+        }
 
         el.innerHTML = `
-        <div class="kana">${g.kana}</div>
-        <div class="label">${g.label}</div>
-        `
+<div class="kana">${g.kana}</div>
+<div class="label">${g.label}</div>
+`
 
         el.dataset.set = JSON.stringify(g.set)
+        el.dataset.level = g.label
 
-        el.onclick = () => toggleKanaGroup(el)
+        el.onclick = () => toggleKanaGroup(el, isKanji)
 
         container.appendChild(el)
 
@@ -34,23 +42,41 @@ function renderKanaBar(groups) {
 
     renderExtraOptions()
 
-    updateQueueFromSelection()
+    if (!isKanji) updateQueueFromSelection()
 
 }
 
 
-function toggleKanaGroup(el) {
+function toggleKanaGroup(el, isKanji) {
 
+    if (isKanji) {
+
+        el.classList.toggle("active")
+
+        const level = el.dataset.level.toLowerCase()
+
+        if (el.classList.contains("active")) {
+            loadKanjiLevel(level)
+        } else {
+            removeKanjiLevel(level)
+        }
+
+        return
+    }
+
+    // kana mode toggle
     if (!document.querySelector(".kana-group.active")) {
         el.classList.add("active")
         return
     }
+
     el.classList.toggle("active")
 
     updateQueueFromSelection()
-
-
 }
+
+
+
 
 function updateQueueFromSelection() {
 
@@ -66,15 +92,12 @@ function updateQueueFromSelection() {
 
         set.forEach(k => {
 
-            // add base kana
             queue.push(k)
 
-            // dakuten
             if (dakutenEnabled && DAKUTEN[k]) {
                 DAKUTEN[k].forEach(x => queue.push(x))
             }
 
-            // combo
             if (comboEnabled && COMBO[k]) {
                 COMBO[k].forEach(x => queue.push(x))
             }
@@ -88,12 +111,13 @@ function updateQueueFromSelection() {
 }
 
 
+/* ---------- EXTRA OPTIONS ---------- */
+
 let dakutenEnabled = false
 let comboEnabled = false
 
 function renderExtraOptions() {
 
-    // only show for kana modes
     if (DATA !== HIRAGANA && DATA !== KATAKANA && DATA !== MIXED_KANA) {
         return
     }
@@ -104,9 +128,9 @@ function renderExtraOptions() {
     dakuten.className = "kana-group"
 
     dakuten.innerHTML = `
-        <div class="kana">゛</div>
-        <div class="label">dakuten</div>
-    `
+<div class="kana">゛</div>
+<div class="label">dakuten</div>
+`
 
     dakuten.onclick = () => {
         dakutenEnabled = !dakutenEnabled
@@ -118,9 +142,9 @@ function renderExtraOptions() {
     combo.className = "kana-group"
 
     combo.innerHTML = `
-        <div class="kana">ゃ</div>
-        <div class="label">combo</div>
-    `
+<div class="kana">ゃ</div>
+<div class="label">combo</div>
+`
 
     combo.onclick = () => {
         comboEnabled = !comboEnabled
