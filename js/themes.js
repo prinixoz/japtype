@@ -2,6 +2,8 @@ const THEMES = {
 
     "nord": { bg: "#2e3440", text: "#d8dee9", accent: "#88c0d0", panel: "#3b4252", border: "#4c566a", muted: "#81a1c1", correct: "#a3be8c", wrong: "#bf616a" },
 
+    "black": { bg: "#000000", text: "#e6e6e6", accent: "#00cfff", panel: "#050505", border: "#111111", muted: "#666666", correct: "#5cff9c", wrong: "#ff6b6b" },
+
     "9009": { bg: "#101216", text: "#e5e9f0", accent: "#ff6b6b", panel: "#161a22", border: "#2a2f3a", muted: "#7a8596", correct: "#50fa7b", wrong: "#ff5555" },
 
     "aether": { bg: "#0e1116", text: "#e2e8f0", accent: "#6bc5ff", panel: "#151a22", border: "#283142", muted: "#6e7b91", correct: "#50fa7b", wrong: "#ff5555" },

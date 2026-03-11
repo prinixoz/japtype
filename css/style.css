@@ -78,9 +78,12 @@ margin-bottom:40px;
 display:flex;
 gap:32px;
 white-space:nowrap;
-transition:transform .2s ease;
+
+transition: transform .35s cubic-bezier(.22,.61,.36,1);
+
 font-family:"Kosugi Maru", sans-serif;
-color:var(--text);
+
+will-change: transform;
 }
 
 
@@ -166,4 +169,22 @@ font-size:12px;
 .kana-group.active{
 color:var(--kana-active);
 font-weight:600;
+}
+
+.char.current{
+
+transform:scale(1.05);
+
+transition:transform .18s ease;
+
+}
+
+.char.correct{
+color:var(--correct);
+opacity:.9;
+}
+
+.char.wrong{
+color:var(--wrong);
+opacity:.9;
 }

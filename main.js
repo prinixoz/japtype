@@ -188,19 +188,20 @@ function setCursor() {
 
 function center() {
 
-    let current = chars[index]
-
+    const current = chars[index]
     if (!current) return
 
-    let wrap = wordsEl.parentElement
-    let wrapWidth = wrap.offsetWidth
+    const wrap = wordsEl.parentElement
+    const wrapWidth = wrap.offsetWidth
 
-    let charLeft = current.offsetLeft
-    let charWidth = current.offsetWidth
+    const charLeft = current.offsetLeft
+    const charWidth = current.offsetWidth
 
-    let target = wrapWidth / 2 - (charLeft + charWidth / 2)
+    const target = wrapWidth / 2 - (charLeft + charWidth / 2)
 
-    wordsEl.style.transform = `translateX(${target}px)`
+    requestAnimationFrame(() => {
+        wordsEl.style.transform = `translateX(${target}px)`
+    })
 
 }
 
