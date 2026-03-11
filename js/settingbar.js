@@ -18,20 +18,34 @@ function getSettings() {
     const key = getModeKey()
 
     if (!SETTINGS[key]) {
+        SETTINGS[key] = {}
+    }
 
-        if (key === "kanji") {
-            SETTINGS[key] = { levels: ["n5"] }
-        } else {
-            SETTINGS[key] = {
-                disabled: [],
-                dakuten: false,
-                combo: false
-            }
+    const s = SETTINGS[key]
+
+    if (key === "kanji") {
+
+        if (!Array.isArray(s.levels)) {
+            s.levels = ["n5"]
+        }
+
+    } else {
+
+        if (!Array.isArray(s.disabled)) {
+            s.disabled = []
+        }
+
+        if (typeof s.dakuten !== "boolean") {
+            s.dakuten = false
+        }
+
+        if (typeof s.combo !== "boolean") {
+            s.combo = false
         }
 
     }
 
-    return SETTINGS[key]
+    return s
 }
 
 function saveSettings() {
@@ -112,7 +126,7 @@ function toggleKanaGroup(el, isKanji) {
 
         const level = el.dataset.level.toLowerCase()
 
-        if (settings.levels.includes(level)) {
+        if (settings.levels && settings.levels.includes(level)) {
 
             if (settings.levels.length === 1) return
 
@@ -122,6 +136,10 @@ function toggleKanaGroup(el, isKanji) {
             removeKanjiLevel(level)
 
         } else {
+
+            if (!Array.isArray(settings.levels)) {
+                settings.levels = []
+            }
 
             settings.levels.push(level)
 

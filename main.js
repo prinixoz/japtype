@@ -292,12 +292,11 @@ document.addEventListener("keydown", e => {
 
         e.preventDefault()
 
-        startMode(DATA)
+        startMode(currentMode)
 
     }
 
 })
-
 
 document.body.onclick = () => input.focus()
 
