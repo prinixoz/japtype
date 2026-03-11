@@ -133,7 +133,7 @@ function center() {
 
 input.addEventListener("input", () => {
 
-    let typed = input.value.trim()
+    let typed = input.value.trim().toLowerCase();
     preview.textContent = typed
 
     let kana = queue[index]
