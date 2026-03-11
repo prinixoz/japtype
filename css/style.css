@@ -76,6 +76,7 @@ gap:32px;
 white-space:nowrap;
 transition:transform .2s ease;
 font-family:"Kosugi Maru", sans-serif;
+color:var(--text);
 }
 
 
@@ -110,19 +111,19 @@ opacity:1;
 
 
 
-.correct{
+.char.correct .kana{
 color:var(--correct);
 }
 
 
 
-.wrong{
+.char.wrong .kana{
 color:var(--wrong);
 }
 
 
 
-.current{
+.char.current .kana{
 background:var(--current-bg);
 color:var(--current-text);
 border-radius:6px;
@@ -161,25 +162,4 @@ font-size:12px;
 .kana-group.active{
 color:var(--kana-active);
 font-weight:600;
-}
-
-#words {
-    color: var(--text);
-}
-
-.word letter {
-    color: var(--muted);
-}
-
-.word letter.correct {
-    color: var(--correct);
-}
-
-.word letter.incorrect {
-    color: var(--wrong);
-}
-
-.word letter.active {
-    background: var(--accent);
-    color: var(--bg);
 }

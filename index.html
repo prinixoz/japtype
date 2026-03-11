@@ -5,10 +5,10 @@
 
         <link href="https://fonts.googleapis.com/css2?family=Kosugi+Maru&display=swap" rel="stylesheet">
 
-        <link rel="stylesheet" href="style.css">
-
-        <link rel="stylesheet" href="menu.css">
-        <link rel="stylesheet" href="setting-bar.css">
+        <link rel="stylesheet" href="./css/style.css">
+        <link rel="stylesheet" href="./css/menu.css">
+        <link rel="stylesheet" href="./css/result.css">
+        <link rel="stylesheet" href="./css/setting-bar.css">
 
     </head>
     <body>
@@ -78,7 +78,7 @@
                 <div class="cmd"><span class="icon">漢</span> Kanji</div>
                 <div class="cmd"><span class="icon">〄</span> Mixed Kana</div>
 
-                <div class="cmd"><span class="icon">↻</span> Restart</div>
+                <div class="cmd"><span class="icon">↻</span> reset</div>
 
                 <div class="cmd"><span class="icon">🎨</span> Theme</div>
                 <div class="cmd"><span class="icon">🔤</span> Font</div>
@@ -87,17 +87,44 @@
 
         </div>
 
+        <div id="results">
 
-        <script src="./js/hiragana.js"></script>
-        <script src="./js/katakana.js"></script>
-        <script src="./js/mixedkana.js"></script>
-        <script src="./js/kanji.js"></script>
+            <h2>RESULTS</h2>
 
-        <script src="./js/themes.js"></script>
+            <div class="stats">
+                accuracy
+                speed
+                correct
+                wrong
+                time
+            </div>
 
-        <script src="./js/menu.js"></script>
-        <script src="./js/settingbar.js"></script>
-        <script src="script.js"></script>
+            <div class="mistakes">
+                most mistakes
+            </div>
+
+            <div class="buttons">
+                restart
+                new mode
+            </div>
+
+        </div>
+
+
+        <!-- DATA -->
+        <script defer src="./js/hiragana.js"></script>
+        <script defer src="./js/katakana.js"></script>
+        <script defer src="./js/mixedkana.js"></script>
+        <script defer src="./js/kanji.js"></script>
+
+        <!-- Customization -->
+        <script defer src="./js/themes.js"></script>
+
+        <script defer src="./js/settingbar.js"></script>
+        <script defer src="./js/menu.js"></script>
+        <script defer src="./js/result.js"></script>
+        <script defer src="main.js"></script>
+
 
     </body>
 </html>

@@ -12,7 +12,6 @@ let currentMenu = "main"
 /* ---------- DATA ---------- */
 
 const FONTS = [
-
     { name: "Monospace", css: "monospace" },
     { name: "Noto Sans JP", css: "'Noto Sans JP', sans-serif" },
     { name: "Noto Serif JP", css: "'Noto Serif JP', serif" },
@@ -22,7 +21,6 @@ const FONTS = [
     { name: "Kosugi Maru", css: "'Kosugi Maru', sans-serif" },
     { name: "Zen Kaku Gothic", css: "'Zen Kaku Gothic New', sans-serif" },
     { name: "Zen Old Mincho", css: "'Zen Old Mincho', serif" }
-
 ]
 
 const MENUS = {
@@ -32,7 +30,7 @@ const MENUS = {
         { icon: "ア", name: "Katakana", action: () => startMode(KATAKANA) },
         { icon: "〄", name: "Mixed Kana", action: () => startMode(MIXED_KANA) },
         { icon: "漢", name: "Kanji", action: () => startMode("KANJI") },
-        { icon: "↻", name: "Restart", action: () => startMode(DATA) },
+        { icon: "⟲", name: "Reset", action: () => resetSettings() },
         { icon: "🔤", name: "Font", submenu: "fonts" },
         { icon: "🎨", name: "Theme", submenu: "themes" }
     ],
@@ -47,15 +45,17 @@ const MENUS = {
 
                 const words = document.getElementById("words")
 
-                words.style.fontFamily = f.css
+                if (words) {
+                    words.style.fontFamily = f.css
+                }
 
                 localStorage.setItem("font", f.css)
 
                 closeMenu()
-
             }
         }))
     ],
+
     themes: [
         { icon: "←", name: "Back", submenu: "main" },
 
@@ -85,18 +85,19 @@ function renderMenu(name) {
         if (cmd.font) {
 
             el.innerHTML = `
-  <span class="icon" style="font-family:${cmd.font}">あ</span>
-  ${cmd.name}
-  `
+<span class="icon" style="font-family:${cmd.font}">あ</span>
+${cmd.name}
+`
 
         } else {
 
             el.innerHTML = `
-  <span class="icon">${cmd.icon ?? ""}</span>
-  ${cmd.name}
-  `
+<span class="icon">${cmd.icon ?? ""}</span>
+${cmd.name}
+`
 
         }
+
         el.addEventListener("click", () => runCommand(i))
 
         el.addEventListener("mouseenter", () => {
@@ -135,6 +136,7 @@ function runCommand(i) {
 
 }
 
+
 /* ---------- UI ---------- */
 
 function updateHighlight() {
@@ -165,7 +167,10 @@ function closeMenu() {
 
     menu.classList.remove("open")
     commandInput.blur()
-    input.focus()
+
+    if (typeof input !== "undefined") {
+        input.focus()
+    }
 
 }
 
@@ -207,17 +212,20 @@ commandInput.addEventListener("input", () => {
 
 })
 
+
 /* ---------- KEYBOARD ---------- */
 
 document.addEventListener("keydown", e => {
 
     if (e.ctrlKey && e.key.toLowerCase() === "p") {
+
         e.preventDefault()
 
         if (menu.classList.contains("open")) closeMenu()
         else openMenu()
 
         return
+
     }
 
     if (!menu.classList.contains("open")) return
@@ -228,20 +236,26 @@ document.addEventListener("keydown", e => {
     }
 
     if (e.key === "ArrowDown") {
+
         e.preventDefault()
         activeIndex = (activeIndex + 1) % commands.length
         updateHighlight()
+
     }
 
     if (e.key === "ArrowUp") {
+
         e.preventDefault()
         activeIndex = (activeIndex - 1 + commands.length) % commands.length
         updateHighlight()
+
     }
 
     if (e.key === "Enter") {
+
         e.preventDefault()
         runCommand(activeIndex)
+
     }
 
 })
@@ -251,7 +265,9 @@ document.addEventListener("keydown", e => {
 
 const hamburger = document.querySelector(".menu-btn")
 
-hamburger.onclick = () => openMenu()
+if (hamburger) {
+    hamburger.onclick = () => openMenu()
+}
 
 
 document.addEventListener("click", e => {
@@ -263,8 +279,27 @@ document.addEventListener("click", e => {
 })
 
 
+/* ---------- LOAD SAVED FONT ---------- */
 
-/*-------------- Loading font after page load*/
+window.addEventListener("load", () => {
+
+    const savedFont = localStorage.getItem("font")
+
+    if (savedFont) {
+
+        const words = document.getElementById("words")
+
+        if (words) {
+            words.style.fontFamily = savedFont
+        }
+
+    }
+
+})
+
+
+/* ---------- LOAD GOOGLE FONTS ---------- */
+
 window.addEventListener("load", () => {
 
     const link = document.createElement("link")
@@ -277,3 +312,21 @@ window.addEventListener("load", () => {
     document.head.appendChild(link)
 
 })
+
+function resetSettings() {
+
+    const confirmReset = confirm(
+        "Reset everything?\n\nThis will clear:\n• kana selections\n• kanji levels\n• theme\n• font\n• saved mode"
+    )
+
+    if (!confirmReset) return
+
+    localStorage.removeItem("kanaSettings")
+    localStorage.removeItem("kana_mode")
+    localStorage.removeItem("font")
+    localStorage.removeItem("theme")
+
+    location.reload()
+
+}
+

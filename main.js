@@ -12,11 +12,47 @@ let chars = []
 let index = 0
 
 
+/* ---------- MODE STORAGE ---------- */
+
+function getModeKey(mode) {
+
+    if (mode === HIRAGANA) return "hiragana"
+    if (mode === KATAKANA) return "katakana"
+    if (mode === MIXED_KANA) return "mixed"
+    if (mode === "KANJI") return "kanji"
+
+    return "hiragana"
+}
+
+function saveMode(mode) {
+    localStorage.setItem("kana_mode", getModeKey(mode))
+}
+
+function loadMode() {
+
+    const saved = localStorage.getItem("kana_mode")
+
+    if (saved === "katakana") return KATAKANA
+    if (saved === "mixed") return MIXED_KANA
+    if (saved === "kanji") return "KANJI"
+
+    return HIRAGANA
+}
+
+
+/* ---------- START MODE ---------- */
+
 async function startMode(mode) {
+
+    const result = document.getElementById("results")
+    if (result) result.classList.remove("show")
 
     DATA = mode
     currentMode = mode
 
+    saveMode(mode)
+
+    startTestStats()
     if (mode === HIRAGANA) {
         queue = Object.keys(HIRAGANA)
         renderKanaBar(HIRA_GROUPS)
@@ -33,28 +69,49 @@ async function startMode(mode) {
     }
 
     if (mode === "KANJI") {
+
         resetKanji()
+
         DATA = {}
         queue = []
+
         renderKanaBar(KANJI_GROUPS)
-        await loadKanjiLevel("n5")
+
+        const settings = getSettings()
+        const levels = settings.levels || ["n5"]
+
+        for (const level of levels) {
+            await loadKanjiLevel(level)
+        }
+
     } else {
+
         shuffle(queue)
+
     }
 
     generate()
 }
 
 
+/* ---------- SHUFFLE ---------- */
 
 function shuffle(a) {
+
     for (let i = a.length - 1; i > 0; i--) {
+
         let j = Math.floor(Math.random() * (i + 1))
-        let t = a[i]; a[i] = a[j]; a[j] = t
+
+        let t = a[i]
+        a[i] = a[j]
+        a[j] = t
+
     }
+
 }
 
 
+/* ---------- CREATE CHAR ---------- */
 
 function createChar(kana) {
 
@@ -81,6 +138,7 @@ function createChar(kana) {
 }
 
 
+/* ---------- GENERATE ---------- */
 
 function generate() {
 
@@ -98,23 +156,27 @@ function generate() {
 }
 
 
+/* ---------- CURSOR ---------- */
 
 function setCursor() {
 
     chars.forEach(c => c.classList.remove("current"))
 
     if (chars[index]) {
+
         chars[index].classList.add("current")
+
         center()
+
     }
 
 }
 
 
-
 function center() {
 
     let current = chars[index]
+
     if (!current) return
 
     let wrap = wordsEl.parentElement
@@ -130,10 +192,11 @@ function center() {
 }
 
 
+/* ---------- INPUT ---------- */
 
 input.addEventListener("input", () => {
 
-    let typed = input.value.trim().toLowerCase();
+    let typed = input.value.trim().toLowerCase()
     preview.textContent = typed
 
     let kana = queue[index]
@@ -143,7 +206,6 @@ input.addEventListener("input", () => {
 
     const script = detectScript(typed)
 
-    // select answers for the current script
     let validAnswers = answers.filter(a => {
 
         if (script === "romaji") return /^[a-zA-Z]+$/.test(a)
@@ -151,6 +213,7 @@ input.addEventListener("input", () => {
         if (script === "katakana") return /^[\u30A0-\u30FF]+$/.test(a)
 
         return true
+
     })
 
     if (validAnswers.length === 0) return
@@ -159,13 +222,21 @@ input.addEventListener("input", () => {
 
     let char = chars[index]
 
-    // correct
+    /* ---------- CORRECT ---------- */
+
     if (validAnswers.includes(typed)) {
 
         char.classList.add("show")
         char.classList.add("correct")
 
+        recordCorrect()   // result stat
+
         index++
+
+        if (index >= queue.length) {
+            showResults()
+            return
+        }
 
         input.value = ""
         preview.textContent = ""
@@ -175,11 +246,14 @@ input.addEventListener("input", () => {
         return
     }
 
-    // wrong if user exceeds possible length
+    /* ---------- WRONG ---------- */
+
     if (typed.length >= maxLen) {
 
         char.classList.add("show")
         char.classList.add("wrong")
+
+        recordWrong(kana)   // result stat
 
         queue.push(kana)
 
@@ -196,42 +270,33 @@ input.addEventListener("input", () => {
 
 })
 
+
+/* ---------- KEYBOARD ---------- */
+
 document.addEventListener("keydown", e => {
 
     if (e.key === "Tab") {
+
         e.preventDefault()
+
         startMode(DATA)
+
     }
 
 })
 
 
-
 document.body.onclick = () => input.focus()
 
 
+/* ---------- LOAD LAST MODE ---------- */
 
-function saveMode(mode) {
-    localStorage.setItem("kana_mode", mode)
-}
+const lastMode = loadMode()
 
-
-
-function loadMode() {
-    return localStorage.getItem("kana_mode")
-}
+startMode(lastMode)
 
 
-
-let lastMode = loadMode()
-
-if (lastMode === "katakana") {
-    startMode(KATAKANA)
-} else {
-    startMode(HIRAGANA)
-}
-
-
+/* ---------- GROUP HELPER ---------- */
 
 function activateKanaGroup(set) {
 
@@ -245,6 +310,9 @@ function activateKanaGroup(set) {
 
 }
 
+
+/* ---------- SCRIPT DETECTION ---------- */
+
 function detectScript(text) {
 
     if (/^[a-zA-Z]+$/.test(text)) return "romaji"
@@ -254,4 +322,5 @@ function detectScript(text) {
     if (/^[\u30A0-\u30FF]+$/.test(text)) return "katakana"
 
     return "unknown"
+
 }
