@@ -7,14 +7,16 @@ function resetKanji() {
 }
 
 let DATA = HIRAGANA
+let currentMode = HIRAGANA
 let queue = []
 let chars = []
 let index = 0
 
 
+
 /* ---------- MODE STORAGE ---------- */
 
-function getModeKey(mode) {
+function getModeKey(mode = currentMode) {
 
     if (mode === HIRAGANA) return "hiragana"
     if (mode === KATAKANA) return "katakana"
@@ -23,6 +25,7 @@ function getModeKey(mode) {
 
     return "hiragana"
 }
+
 
 function saveMode(mode) {
     localStorage.setItem("kana_mode", getModeKey(mode))
@@ -47,12 +50,20 @@ async function startMode(mode) {
     const result = document.getElementById("results")
     if (result) result.classList.remove("show")
 
-    DATA = mode
+    input.value = ""
+    preview.textContent = ""
+    input.focus()
+
     currentMode = mode
+    DATA = mode
 
     saveMode(mode)
+    updateQueueFromSelection()
 
     startTestStats()
+
+
+
     if (mode === HIRAGANA) {
         queue = Object.keys(HIRAGANA)
         renderKanaBar(HIRA_GROUPS)
@@ -84,7 +95,9 @@ async function startMode(mode) {
             await loadKanjiLevel(level)
         }
 
-    } else {
+    }
+
+    else {
 
         shuffle(queue)
 
